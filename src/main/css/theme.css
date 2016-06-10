@@ -1,0 +1,27 @@
+#test
+{
+    -fx-background-image: url("../res/ico/next.png");
+    -fx-background-position: center center;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 5em;
+    -fx-effect: dropshadow(three-pass-box, #202020, 3, 0, 0, 0); 
+    -fx-min-width: 56px;
+    -fx-min-height: 56px;
+    -fx-max-width: 56px;
+    -fx-max-height: 56px;
+}
+
+#back_button
+{
+    -fx-background-image: url("../res/ico/back.png");
+	-fx-background-repeat: no-repeat no-repeat;
+    -fx-background-position: center center;
+    -fx-background-color: null;
+    -fx-background-radius: 0;
+}
+#back_button:hover {
+    -fx-background-color: #ffaa55;
+}
+#back_button:pressed {
+    -fx-background-color: #ffeedd;
+}
