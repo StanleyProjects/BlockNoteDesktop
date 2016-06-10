@@ -1,3 +1,10 @@
+.list-view {   
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
 #test
 {
     -fx-background-image: url("../res/ico/next.png");
@@ -9,6 +16,19 @@
     -fx-min-height: 56px;
     -fx-max-width: 56px;
     -fx-max-height: 56px;
+}
+
+#main_list_cell
+{
+    -fx-background-color: cyan;
+    -fx-background-radius: 0;
+	-fx-text-fill: white;
+}
+#main_list_cell:hover {
+	-fx-text-fill: cyan;
+}
+#main_list_cell:empty {
+    -fx-background-color: transparent;
 }
 
 #back_button
