@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -31,8 +32,10 @@ import stan.block.note.core.Block;
 import stan.block.note.core.Unit;
 
 import stan.block.note.ui.cells.UnitCell;
+import stan.block.note.ui.panes.EditUnitBox;
 
 import stan.block.note.listeners.ui.cells.IUnitCellListener;
+import stan.block.note.listeners.ui.panes.IEditUnitBoxListener;
 
 public class BNPane
     extends VBox
@@ -43,6 +46,10 @@ public class BNPane
     Button putNewBlock = new Button();
     Label blockName = new Label();
     Label tableName = new Label();
+    //
+    StackPane editUnit = new StackPane();
+    EditUnitBox editBox;
+    //
     ListView<Unit> listView;
 
     public BNPane()
@@ -117,7 +124,7 @@ public class BNPane
         HBox blockMain = new HBox();
         blockMain.setStyle("-fx-background-color: purple");
         VBox.setVgrow(blockMain, Priority.ALWAYS);
-        blockMain.getChildren().addAll(initLeftPane());
+        blockMain.getChildren().addAll(initLeftPane(), initRightPane());
         return blockMain;
     }
 
@@ -146,10 +153,10 @@ public class BNPane
             }
         });
         botButtons.getChildren().addAll(putNewBlock);
-        botButtons.setAlignment(Pos.CENTER_RIGHT);
+        botButtons.setAlignment(Pos.CENTER);
         //
         blockLeft.getChildren().addAll(listView, botButtons);
-        blockLeft.setAlignment(Pos.BOTTOM_RIGHT);
+        blockLeft.setAlignment(Pos.BOTTOM_CENTER);
         //blockLeft.getChildren().addAll(listView);
         return blockLeft;
     }
@@ -165,7 +172,7 @@ public class BNPane
             	{
 					public void editUnit(Unit item)
 					{
-
+						showEdit(item);
 					}
 					public void deleteUnit(Unit item)
 					{
@@ -177,6 +184,35 @@ public class BNPane
         });
         return list;
     }
+    private StackPane initRightPane()
+    {
+        StackPane blockRight = new StackPane();
+        blockRight.setStyle("-fx-background-color: orange");
+        HBox.setHgrow(blockRight, Priority.ALWAYS);
+        //
+        editUnit.setStyle("-fx-background-color: rgba(0,0,0,0.5)");
+		editUnit.setAlignment(Pos.CENTER);
+		editBox = new EditUnitBox(new IEditUnitBoxListener()
+    	{
+			public void cancel()
+			{
+				hideEdit();
+			}
+			public void save(Unit item)
+			{
+                BNCore.getInstance().editBlock(item.id, item.name);
+                refresh();
+				hideEdit();
+			}
+    	});
+		editBox.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        editUnit.getChildren().addAll(editBox);
+    	editUnit.setVisible(false);
+        //
+        blockRight.getChildren().addAll(editUnit);
+        return blockRight;
+    }
+
     private void setListUnits(Block block)
     {
         List<Unit> list = new ArrayList<Unit>();
@@ -186,5 +222,15 @@ public class BNPane
         }
         ObservableList<Unit> items = FXCollections.observableList(list);
         listView.setItems(items);
+    }
+
+    private void showEdit(Unit item)
+    {
+    	editUnit.setVisible(true);
+    	editBox.setItem(item);
+    }
+    private void hideEdit()
+    {
+    	editUnit.setVisible(false);
     }
 }

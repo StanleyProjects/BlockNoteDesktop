@@ -110,12 +110,16 @@ public class BNCore
     }
     private void updateDates(HashMap block, int next)
     {
-        HashMap dates = (HashMap)block.get("dates");
         if(next + 1 < idTree.size())
         {
             ArrayList blocks = (ArrayList)block.get("blocks");
             updateDates((HashMap)blocks.get(idTree.get(next)), next + 1);
         }
+        updateDates(block);
+    }
+    private void updateDates(HashMap block)
+    {
+        HashMap dates = (HashMap)block.get("dates");
         dates.put("update", new Date().getTime());
     }
 
@@ -276,6 +280,28 @@ public class BNCore
         blocks.add(createEmptyBlock("new Block"));
         updateDates();
         updateBlockNote();
+    }
+    public void editBlock(String id, String name)
+    {
+        HashMap map = getActualHashMap();
+        if(map == null)
+        {
+            return;
+        }
+        ArrayList blocks = (ArrayList)map.get("blocks");
+        for(int i=0; i<blocks.size(); i++)
+        {
+            HashMap block = (HashMap)blocks.get(i);
+            String idBlock = (String) block.get("id");
+            if(idBlock.equals(id))
+            {
+                block.put("name", name);
+                updateDates(block);
+                updateDates();
+                updateBlockNote();
+                break;
+            }
+        }
     }
     public void deleteBlock(String id)
     {
