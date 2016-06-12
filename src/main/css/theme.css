@@ -54,3 +54,20 @@
 {
     -fx-background-color: #ffeedd;
 }
+
+#put_new_block_button
+{
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, #202020, 3, 0, 0, 0);
+    -fx-background-radius: 5em;
+    -fx-min-width: 42px;
+    -fx-min-height: 42px;
+    -fx-max-width: 42px;
+    -fx-max-height: 42px;
+}
+#put_new_block_button:hover {
+    -fx-background-color: #505050;
+}
+#put_new_block_button:pressed {
+    -fx-background-color: #202020;
+}

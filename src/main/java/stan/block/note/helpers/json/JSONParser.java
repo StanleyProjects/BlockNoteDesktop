@@ -1,4 +1,4 @@
-package stan.block.note.json;
+package stan.block.note.helpers.json;
 
 import java.io.IOException;
 import java.io.Reader;
