@@ -277,6 +277,27 @@ public class BNCore
         updateDates();
         updateBlockNote();
     }
+    public void deleteBlock(String id)
+    {
+        HashMap map = getActualHashMap();
+        if(map == null)
+        {
+            return;
+        }
+        ArrayList blocks = (ArrayList)map.get("blocks");
+        for(int i=0; i<blocks.size(); i++)
+        {
+            HashMap block = (HashMap)blocks.get(i);
+            String idBlock = (String) block.get("id");
+            if(idBlock.equals(id))
+            {
+                blocks.remove(i);
+                break;
+            }
+        }
+        updateDates();
+        updateBlockNote();
+    }
 
     private void addFileToZip(String fileName, ZipOutputStream zos)
     throws IOException

@@ -28,6 +28,11 @@ import javafx.scene.shape.Rectangle;
 
 import stan.block.note.core.BNCore;
 import stan.block.note.core.Block;
+import stan.block.note.core.Unit;
+
+import stan.block.note.ui.cells.UnitCell;
+
+import stan.block.note.listeners.ui.cells.IUnitCellListener;
 
 public class BNPane
     extends VBox
@@ -38,7 +43,7 @@ public class BNPane
     Button putNewBlock = new Button();
     Label blockName = new Label();
     Label tableName = new Label();
-    ListView<String> listView;
+    ListView<Unit> listView;
 
     public BNPane()
     {
@@ -148,67 +153,38 @@ public class BNPane
         //blockLeft.getChildren().addAll(listView);
         return blockLeft;
     }
-    private ListView<String> initListView()
+    private ListView<Unit> initListView()
     {
-        ListView<String> list = new ListView<String>();
-        list.setCellFactory(new Callback<ListView<String>, ListCell<String>>()
+        ListView<Unit> list = new ListView<Unit>();
+        list.setCellFactory(new Callback<ListView<Unit>, ListCell<Unit>>()
         {
             @Override
-            public ListCell<String> call(ListView<String> list)
+            public ListCell<Unit> call(ListView<Unit> list)
             {
-                return new UnitCell();
+                return new UnitCell(new IUnitCellListener()
+            	{
+					public void editUnit(Unit item)
+					{
+
+					}
+					public void deleteUnit(Unit item)
+					{
+		                BNCore.getInstance().deleteBlock(item.id);
+		                refresh();
+					}
+            	});
             }
         });
         return list;
     }
     private void setListUnits(Block block)
     {
-        List<String> list = new ArrayList<String>();
+        List<Unit> list = new ArrayList<Unit>();
         for(int i = 0; i < block.blocks.size(); i++)
         {
-            list.add(block.blocks.get(i).name);
+            list.add(block.blocks.get(i));
         }
-        ObservableList<String> items = FXCollections.observableList(list);
+        ObservableList<Unit> items = FXCollections.observableList(list);
         listView.setItems(items);
     }
-
-    static class UnitCell extends ListCell<String>
-    {
-        @Override
-        public void updateItem(String item, boolean empty)
-        {
-            super.updateItem(item, empty);
-            setId("main_list_cell");
-            if(item != null)
-            {
-                setGraphic(null);
-                setText(item);
-            }
-            if(!empty)
-            {
-                setContextMenu(initContextMenu());
-            }
-        }
-
-        private ContextMenu initContextMenu()
-        {
-            ContextMenu contextMenu = new ContextMenu();
-            MenuItem edit = new MenuItem("Edit");
-            edit.setOnAction(new EventHandler<ActionEvent>()
-            {
-                @Override
-                public void handle(ActionEvent event)
-                {
-                    edit();
-                }
-            });
-            contextMenu.getItems().addAll(edit);
-            return contextMenu;
-        }
-
-        private void edit()
-        {
-        }
-    }
-
 }
