@@ -29,6 +29,7 @@ import javafx.scene.shape.Rectangle;
 
 import stan.block.note.core.BNCore;
 import stan.block.note.core.Block;
+import stan.block.note.core.Table;
 import stan.block.note.core.Unit;
 
 import stan.block.note.ui.cells.UnitCell;
@@ -214,7 +215,14 @@ public class BNPane
 			}
 			public void save(Unit item)
 			{
-                BNCore.getInstance().editBlock(item.id, item.name);
+				if(item instanceof Block)
+				{
+					BNCore.getInstance().editBlock(item.id, item.name);
+				}
+				else if(item instanceof Table)
+				{
+					BNCore.getInstance().editTable(item.id, item.name);
+				}
                 refresh();
 				hideEdit();
 			}

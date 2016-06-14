@@ -4,6 +4,7 @@ public class Unit
 {
     public String id;
     public String name;
+    public String color = Colors.RED;
     public Dates dates;
 
     public Unit(String i, String n, long c)

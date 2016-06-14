@@ -4,6 +4,9 @@
     -fx-background-insets: 0;
     -fx-padding: 0;
 }
+.list-cell {
+    -fx-padding: 0;
+}
 
 #test
 {
@@ -20,15 +23,18 @@
 
 #main_list_cell
 {
-    -fx-background-color: cyan;
+    -fx-background-color: white;
     -fx-background-radius: 0;
-	-fx-text-fill: white;
 }
 #main_list_cell:hover {
-	-fx-text-fill: cyan;
 }
 #main_list_cell:empty {
     -fx-background-color: transparent;
+}
+
+#block_ico
+{
+    -fx-image: url("../res/ico/folder.png");
 }
 
 #back_button

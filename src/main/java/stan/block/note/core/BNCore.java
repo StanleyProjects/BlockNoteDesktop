@@ -156,6 +156,7 @@ public class BNCore
         HashMap map = new HashMap<String, Object>();
         map.put("id", UUID.randomUUID().toString());
         map.put("name", name);
+        map.put("color", Colors.RED);
         HashMap dates = new HashMap<String, Object>();
         dates.put("create", create);
         dates.put("update", create);
@@ -291,6 +292,28 @@ public class BNCore
         tables.add(createEmptyTable("new Table"));
         updateDates();
         updateBlockNote();
+    }
+    public void editTable(String id, String name)
+    {
+        HashMap map = getActualHashMap();
+        if(map == null)
+        {
+            return;
+        }
+        ArrayList tables = (ArrayList)map.get("tables");
+        for(int i=0; i<tables.size(); i++)
+        {
+            HashMap table = (HashMap)tables.get(i);
+            String idTable = (String) table.get("id");
+            if(idTable.equals(id))
+            {
+                table.put("name", name);
+                updateDates(table);
+                updateDates();
+                updateBlockNote();
+                break;
+            }
+        }
     }
 	
     public void updateBlockNote()

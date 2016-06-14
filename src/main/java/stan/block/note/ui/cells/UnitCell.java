@@ -6,10 +6,15 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 
 import javafx.scene.control.ListCell;
+import javafx.scene.paint.Color;
 
 import stan.block.note.core.Unit;
+import stan.block.note.core.Block;
+import stan.block.note.core.Table;
 
 import stan.block.note.listeners.ui.cells.IUnitCellListener;
+
+import stan.block.note.ui.panes.listitems.BlockListItem;
 
 public class UnitCell
     extends ListCell<Unit>
@@ -26,6 +31,7 @@ public class UnitCell
     {
         super.updateItem(item, empty);
         setId("main_list_cell");
+		setPrefHeight(36);
         //setGraphic(null);
         if(empty)
         {
@@ -33,8 +39,17 @@ public class UnitCell
         }
         else
         {
-            setText(item.name);
-            setContextMenu(initContextMenu(item));
+			if(item instanceof Block)
+			{
+				setGraphic(new BlockListItem((Block)item));
+			}
+			else if(item instanceof Table)
+			{
+				setText(item.name);
+				setTextFill(Color.web("0x"+item.color));
+			}
+			//
+			setContextMenu(initContextMenu(item));
         }
     }
     private ContextMenu initContextMenu(Unit item)
