@@ -58,6 +58,12 @@ public class BNCore
             {
                 block.blocks.add(getBlockFromMap((HashMap)blocks.get(i)));
             }
+            block.tables = new ArrayList<>();
+            ArrayList tables = (ArrayList)map.get("tables");
+            for(int i = 0; i < tables.size(); i++)
+            {
+                block.tables.add(getTableFromMap((HashMap)tables.get(i)));
+            }
         }
         return block;
     }
@@ -68,6 +74,14 @@ public class BNCore
         dates.update = (Long)datesMap.get("update");
         dates.sync = (Long)datesMap.get("sync");
         return new Block((String)map.get("id"), (String)map.get("name"), dates);
+    }
+    public Table getTableFromMap(HashMap map)
+    {
+        HashMap datesMap = (HashMap)map.get("dates");
+        Dates dates = new Dates((Long)datesMap.get("create"));
+        dates.update = (Long)datesMap.get("update");
+        dates.sync = (Long)datesMap.get("sync");
+        return new Table((String)map.get("id"), (String)map.get("name"), dates);
     }
     private HashMap getActualHashMap()
     {
@@ -117,27 +131,38 @@ public class BNCore
         }
         updateDates(block);
     }
-    private void updateDates(HashMap block)
+    private void updateDates(HashMap unit)
     {
-        HashMap dates = (HashMap)block.get("dates");
+        HashMap dates = (HashMap)unit.get("dates");
         dates.put("update", new Date().getTime());
     }
 
     private HashMap createEmptyBlock(String name)
     {
+        HashMap map = createEmptyUnit(name);
+        map.put("blocks", new Object[0]);
+        map.put("tables", new Object[0]);
+        return map;
+    }
+    private HashMap createEmptyTable(String name)
+    {
+        HashMap map = createEmptyUnit(name);
+        map.put("notes", new Object[0]);
+        return map;
+    }
+    private HashMap createEmptyUnit(String name)
+    {
         long create = new Date().getTime();
         HashMap map = new HashMap<String, Object>();
         map.put("id", UUID.randomUUID().toString());
         map.put("name", name);
-        map.put("blocks", new Object[0]);
-        map.put("tables", new Object[0]);
         HashMap dates = new HashMap<String, Object>();
         dates.put("create", create);
         dates.put("update", create);
         dates.put("sync", -1);
         map.put("dates", dates);
         return map;
-    }
+	}
 
 
     public void openBlockNote(String fullPath)
@@ -255,6 +280,19 @@ public class BNCore
         }
     }
 
+    public void putNewTable()
+    {
+        HashMap map = getActualHashMap();
+        if(map == null)
+        {
+            return;
+        }
+        ArrayList tables = (ArrayList)map.get("tables");
+        tables.add(createEmptyTable("new Table"));
+        updateDates();
+        updateBlockNote();
+    }
+	
     public void updateBlockNote()
     {
         String data = null;

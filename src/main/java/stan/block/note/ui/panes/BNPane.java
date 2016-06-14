@@ -44,6 +44,7 @@ public class BNPane
     Button back = new Button();
     Button close = new Button();
     Button putNewBlock = new Button();
+    Button putNewTable = new Button();
     Label blockName = new Label();
     Label tableName = new Label();
     //
@@ -67,7 +68,7 @@ public class BNPane
     }
     private void refresh()
     {
-        BNCore.getInstance().openBlockNote("E:/Downloads/blocknote/test.star");
+        BNCore.getInstance().openBlockNote("test.star");
         Block block = BNCore.getInstance().getActualBlock();
         blockName.setText(block.name);
         setListUnits(block);
@@ -141,6 +142,7 @@ public class BNPane
         //
         HBox botButtons = new HBox();
         botButtons.setMaxHeight(boxH);
+		//
         putNewBlock.setId("put_new_block_button");
         putNewBlock.setText("+B");
         putNewBlock.setOnAction(new EventHandler<ActionEvent>()
@@ -152,7 +154,19 @@ public class BNPane
                 refresh();
             }
         });
-        botButtons.getChildren().addAll(putNewBlock);
+        putNewTable.setId("put_new_table_button");
+        putNewTable.setText("+T");
+        putNewTable.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                BNCore.getInstance().putNewTable();
+                refresh();
+            }
+        });
+		//
+        botButtons.getChildren().addAll(putNewBlock, putNewTable);
         botButtons.setAlignment(Pos.CENTER);
         //
         blockLeft.getChildren().addAll(listView, botButtons);
@@ -219,6 +233,10 @@ public class BNPane
         for(int i = 0; i < block.blocks.size(); i++)
         {
             list.add(block.blocks.get(i));
+        }
+        for(int i = 0; i < block.tables.size(); i++)
+        {
+            list.add(block.tables.get(i));
         }
         ObservableList<Unit> items = FXCollections.observableList(list);
         listView.setItems(items);
