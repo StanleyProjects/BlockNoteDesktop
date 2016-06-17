@@ -8,9 +8,10 @@ public class Block
     public List<Block> blocks;
     public List<Table> tables;
 
-    public Block(String i, String n, Dates d)
+    public Block(String i, String n, String c, Dates d)
     {
     	super(i, n, d.whenCreate());
+    	this.color = c;
     	dates.update = d.update;
     	dates.sync = d.sync;
     }

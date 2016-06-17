@@ -73,7 +73,7 @@ public class BNCore
         Dates dates = new Dates((Long)datesMap.get("create"));
         dates.update = (Long)datesMap.get("update");
         dates.sync = (Long)datesMap.get("sync");
-        return new Block((String)map.get("id"), (String)map.get("name"), dates);
+        return new Block((String)map.get("id"), (String)map.get("name"), (String)map.get("color"), dates);
     }
     public Table getTableFromMap(HashMap map)
     {
@@ -81,7 +81,7 @@ public class BNCore
         Dates dates = new Dates((Long)datesMap.get("create"));
         dates.update = (Long)datesMap.get("update");
         dates.sync = (Long)datesMap.get("sync");
-        return new Table((String)map.get("id"), (String)map.get("name"), dates);
+        return new Table((String)map.get("id"), (String)map.get("name"), (String)map.get("color"), dates);
     }
     private HashMap getActualHashMap()
     {
@@ -281,6 +281,15 @@ public class BNCore
         }
     }
 
+    private void editUnit(HashMap unit, String name, String color)
+    {
+        unit.put("name", name);
+        unit.put("color", color);
+        updateDates(unit);
+        updateDates();
+        updateBlockNote();
+    }
+
     public void putNewTable()
     {
         HashMap map = getActualHashMap();
@@ -293,7 +302,7 @@ public class BNCore
         updateDates();
         updateBlockNote();
     }
-    public void editTable(String id, String name)
+    public void editTable(String id, String name, String color)
     {
         HashMap map = getActualHashMap();
         if(map == null)
@@ -307,13 +316,31 @@ public class BNCore
             String idTable = (String) table.get("id");
             if(idTable.equals(id))
             {
-                table.put("name", name);
-                updateDates(table);
-                updateDates();
-                updateBlockNote();
+                editUnit(table, name, color);
                 break;
             }
         }
+    }
+    public void deleteTable(String id)
+    {
+        HashMap map = getActualHashMap();
+        if(map == null)
+        {
+            return;
+        }
+        ArrayList tables = (ArrayList)map.get("tables");
+        for(int i=0; i<tables.size(); i++)
+        {
+            HashMap table = (HashMap)tables.get(i);
+            String idTable = (String)table.get("id");
+            if(idTable.equals(id))
+            {
+                tables.remove(i);
+                break;
+            }
+        }
+        updateDates();
+        updateBlockNote();
     }
 	
     public void updateBlockNote()
@@ -342,7 +369,7 @@ public class BNCore
         updateDates();
         updateBlockNote();
     }
-    public void editBlock(String id, String name)
+    public void editBlock(String id, String name, String color)
     {
         HashMap map = getActualHashMap();
         if(map == null)
@@ -356,10 +383,7 @@ public class BNCore
             String idBlock = (String) block.get("id");
             if(idBlock.equals(id))
             {
-                block.put("name", name);
-                updateDates(block);
-                updateDates();
-                updateBlockNote();
+                editUnit(block, name, color);
                 break;
             }
         }
@@ -375,7 +399,7 @@ public class BNCore
         for(int i=0; i<blocks.size(); i++)
         {
             HashMap block = (HashMap)blocks.get(i);
-            String idBlock = (String) block.get("id");
+            String idBlock = (String)block.get("id");
             if(idBlock.equals(id))
             {
                 blocks.remove(i);

@@ -69,7 +69,7 @@ public class BNPane
     }
     private void refresh()
     {
-        BNCore.getInstance().openBlockNote("test.star");
+        BNCore.getInstance().openBlockNote("E:/Downloads/blocknote/test.star");
         Block block = BNCore.getInstance().getActualBlock();
         blockName.setText(block.name);
         setListUnits(block);
@@ -143,7 +143,7 @@ public class BNPane
         //
         HBox botButtons = new HBox();
         botButtons.setMaxHeight(boxH);
-		//
+        //
         putNewBlock.setId("put_new_block_button");
         putNewBlock.setText("+B");
         putNewBlock.setOnAction(new EventHandler<ActionEvent>()
@@ -166,7 +166,7 @@ public class BNPane
                 refresh();
             }
         });
-		//
+        //
         botButtons.getChildren().addAll(putNewBlock, putNewTable);
         botButtons.setAlignment(Pos.CENTER);
         //
@@ -184,17 +184,26 @@ public class BNPane
             public ListCell<Unit> call(ListView<Unit> list)
             {
                 return new UnitCell(new IUnitCellListener()
-            	{
-					public void editUnit(Unit item)
-					{
-						showEdit(item);
-					}
-					public void deleteUnit(Unit item)
-					{
-		                BNCore.getInstance().deleteBlock(item.id);
-		                refresh();
-					}
-            	});
+                {
+                    @Override
+                    public void editUnit(Unit item)
+                    {
+                        showEdit(item);
+                    }
+                    @Override
+                    public void deleteUnit(Unit item)
+                    {
+		                if(item instanceof Block)
+		                {
+                        	BNCore.getInstance().deleteBlock(item.id);
+		                }
+		                else if(item instanceof Table)
+		                {
+                        	BNCore.getInstance().deleteTable(item.id);
+		                }
+                        refresh();
+                    }
+                });
             }
         });
         return list;
@@ -206,30 +215,30 @@ public class BNPane
         HBox.setHgrow(blockRight, Priority.ALWAYS);
         //
         editUnit.setStyle("-fx-background-color: rgba(0,0,0,0.5)");
-		editUnit.setAlignment(Pos.CENTER);
-		editBox = new EditUnitBox(new IEditUnitBoxListener()
-    	{
-			public void cancel()
-			{
-				hideEdit();
-			}
-			public void save(Unit item)
-			{
-				if(item instanceof Block)
-				{
-					BNCore.getInstance().editBlock(item.id, item.name);
-				}
-				else if(item instanceof Table)
-				{
-					BNCore.getInstance().editTable(item.id, item.name);
-				}
+        editUnit.setAlignment(Pos.CENTER);
+        editBox = new EditUnitBox(new IEditUnitBoxListener()
+        {
+            public void cancel()
+            {
+                hideEdit();
+            }
+            public void save(Unit item)
+            {
+                if(item instanceof Block)
+                {
+                    BNCore.getInstance().editBlock(item.id, item.name, item.color);
+                }
+                else if(item instanceof Table)
+                {
+                    BNCore.getInstance().editTable(item.id, item.name, item.color);
+                }
                 refresh();
-				hideEdit();
-			}
-    	});
-		editBox.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+                hideEdit();
+            }
+        });
+        editBox.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         editUnit.getChildren().addAll(editBox);
-    	editUnit.setVisible(false);
+        editUnit.setVisible(false);
         //
         blockRight.getChildren().addAll(editUnit);
         return blockRight;
@@ -247,16 +256,17 @@ public class BNPane
             list.add(block.tables.get(i));
         }
         ObservableList<Unit> items = FXCollections.observableList(list);
+        listView.setItems(null);
         listView.setItems(items);
     }
 
     private void showEdit(Unit item)
     {
-    	editUnit.setVisible(true);
-    	editBox.setItem(item);
+        editUnit.setVisible(true);
+        editBox.setItem(item);
     }
     private void hideEdit()
     {
-    	editUnit.setVisible(false);
+        editUnit.setVisible(false);
     }
 }

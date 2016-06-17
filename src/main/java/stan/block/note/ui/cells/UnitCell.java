@@ -15,6 +15,7 @@ import stan.block.note.core.Table;
 import stan.block.note.listeners.ui.cells.IUnitCellListener;
 
 import stan.block.note.ui.panes.listitems.BlockListItem;
+import stan.block.note.ui.panes.listitems.TableListItem;
 
 public class UnitCell
     extends ListCell<Unit>
@@ -32,7 +33,7 @@ public class UnitCell
         super.updateItem(item, empty);
         setId("main_list_cell");
 		setPrefHeight(36);
-        //setGraphic(null);
+        setGraphic(null);
         if(empty)
         {
             setText("");
@@ -45,10 +46,8 @@ public class UnitCell
 			}
 			else if(item instanceof Table)
 			{
-				setText(item.name);
-				setTextFill(Color.web("0x"+item.color));
+                setGraphic(new TableListItem((Table)item));
 			}
-			//
 			setContextMenu(initContextMenu(item));
         }
     }

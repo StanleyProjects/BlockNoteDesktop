@@ -12,11 +12,11 @@ import javafx.scene.layout.Priority;
 
 import javafx.scene.paint.Color;
 
-import stan.block.note.core.Block;
+import stan.block.note.core.Table;
 
 import stan.block.note.listeners.ui.panes.IEditUnitBoxListener;
 
-public class BlockListItem
+public class TableListItem
     extends HBox
 {
     //VIEWS
@@ -24,21 +24,13 @@ public class BlockListItem
 
     //FIELDS
 
-    public BlockListItem(Block block)
+    public TableListItem(Table t)
     {
         super();
         this.setStyle("-fx-background-color: white");
-        name.setText(block.name);
-		name.setTextFill(Color.web("0x"+block.color));
+        name.setText(t.name);
+		name.setTextFill(Color.web("0x"+t.color));
         name.prefHeightProperty().bind(this.heightProperty());
-		VBox icoBox = new VBox();
-        icoBox.setMaxWidth(18);
-		icoBox.setStyle("-fx-background-color: #"+block.color);
-		ImageView blockIco = new ImageView();
-		blockIco.setId("block_ico");
-		icoBox.getChildren().addAll(blockIco);
-        HBox.setHgrow(icoBox, Priority.ALWAYS);
-        icoBox.prefHeightProperty().bind(this.heightProperty());
-        this.getChildren().addAll(icoBox, name);
+        this.getChildren().addAll(name);
     }
 }
