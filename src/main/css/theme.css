@@ -1,3 +1,7 @@
+@font-face {
+    src: url("../res/fonts/Roboto-Medium.ttf");
+}
+
 .list-view {   
     -fx-background-color: transparent;
     -fx-background-radius: 0;
@@ -20,13 +24,61 @@
     -fx-background-position: center center;
     -fx-background-color: #ffffff;
     -fx-background-radius: 5em;
-    -fx-effect: dropshadow(three-pass-box, #202020, 3, 0, 0, 0); 
+    -fx-effect: dropshadow(three-pass-box, #202020, 3, 0, 0, 0);
     -fx-min-width: 56px;
     -fx-min-height: 56px;
     -fx-max-width: 56px;
     -fx-max-height: 56px;
 }
 
+#edit_unit_box
+{
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, #000000, 5, 0, 0, 0);
+}
+#name_edit
+{
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+#cancel_button, #save_button
+{
+    -fx-font-family: Roboto;
+    -fx-font-size: 16;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+#cancel_button:hover, #save_button:hover
+{
+    -fx-background-color: rgba(0,0,0,0.05);
+}
+#cancel_button:pressed, #save_button:pressed
+{
+    -fx-background-color: rgba(0,0,0,0.2);
+}
+
+#unit_list_item_name
+{
+    -fx-background-color: null;
+    -fx-font-family: Roboto;
+    -fx-font-size: 14;
+}
+#unit_list_item_name:hover
+{
+    -fx-background-color: rgba(0,0,0,0.05);
+}
+#unit_list_item_name:pressed
+{
+    -fx-background-color: rgba(0,0,0,0.2);
+}
+#color_list_item
+{
+    -fx-background-color: null;
+    -fx-opacity: 0.5;
+}
+#color_list_item:hover {
+    -fx-background-color: #ffffff;
+}
 #color_list_cell:empty {
     -fx-background-color: transparent;
 }
@@ -44,6 +96,10 @@
 #block_ico
 {
     -fx-image: url("../res/ico/folder.png");
+}
+#done_ico
+{
+    -fx-image: url("../res/ico/done.png");
 }
 
 #back_button

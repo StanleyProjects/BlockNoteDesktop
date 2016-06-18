@@ -236,7 +236,8 @@ public class BNPane
                 hideEdit();
             }
         });
-        editBox.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        editBox.setMinSize(320, 256);
+        editBox.setMaxSize(0, 0);
         editUnit.getChildren().addAll(editBox);
         editUnit.setVisible(false);
         //

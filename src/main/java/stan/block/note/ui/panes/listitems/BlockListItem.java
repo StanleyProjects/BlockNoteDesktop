@@ -1,10 +1,8 @@
 package stan.block.note.ui.panes.listitems;
 
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 
 import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -13,8 +11,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 
 import stan.block.note.core.Block;
-
-import stan.block.note.listeners.ui.panes.IEditUnitBoxListener;
 
 public class BlockListItem
     extends HBox
@@ -28,9 +24,12 @@ public class BlockListItem
     {
         super();
         this.setStyle("-fx-background-color: white");
+        name.setId("unit_list_item_name");
         name.setText(block.name);
 		name.setTextFill(Color.web("0x"+block.color));
         name.prefHeightProperty().bind(this.heightProperty());
+        name.prefWidthProperty().bind(this.widthProperty());
+        name.setPadding(new Insets(0, 0, 0, 4));
 		VBox icoBox = new VBox();
         icoBox.setMaxWidth(18);
 		icoBox.setStyle("-fx-background-color: #"+block.color);
