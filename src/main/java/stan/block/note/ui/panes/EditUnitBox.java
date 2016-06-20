@@ -205,8 +205,8 @@ public class EditUnitBox
         public ColorListItem(ColorSelect item)
         {
             super();
-            setMinHeight(36);
-            setMinWidth(36);
+            this.setMinHeight(36);
+            this.setMinWidth(36);
             this.setStyle("-fx-background-color: #" + item.color);
             if(item.select)
             {
@@ -217,8 +217,8 @@ public class EditUnitBox
             else
             {
 	            Pane back = new Pane();
-		        back.prefHeightProperty().bind(this.heightProperty());
-		        back.prefWidthProperty().bind(this.widthProperty());
+		        back.minHeightProperty().bind(this.minHeightProperty());
+		        back.minWidthProperty().bind(this.minWidthProperty());
 	            back.setId("color_list_item");
 	            this.getChildren().add(back);
 	            //

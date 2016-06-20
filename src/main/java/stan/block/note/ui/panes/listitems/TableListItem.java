@@ -17,13 +17,21 @@ public class TableListItem
 
     //FIELDS
 
-    public TableListItem(Table t)
+    public TableListItem(Table t, boolean select)
     {
         super();
-        this.setStyle("-fx-background-color: white");
         name.setId("unit_list_item_name");
+		if(select)
+		{
+			this.setStyle("-fx-background-color: #" + t.color);
+			name.setTextFill(Color.web("white"));
+		}
+		else
+		{
+			this.setStyle("-fx-background-color: white");
+			name.setTextFill(Color.web("0x"+t.color));
+		}
         name.setText(t.name);
-		name.setTextFill(Color.web("0x"+t.color));
         name.prefHeightProperty().bind(this.heightProperty());
         name.prefWidthProperty().bind(this.widthProperty());
         name.setPadding(new Insets(0, 0, 0, 4));

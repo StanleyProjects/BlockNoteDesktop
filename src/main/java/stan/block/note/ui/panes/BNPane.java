@@ -3,6 +3,9 @@ package stan.block.note.ui.panes;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -23,9 +26,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import javafx.util.Callback;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
+import javafx.util.Callback;
 
 import stan.block.note.core.BNCore;
 import stan.block.note.core.Block;
@@ -34,93 +38,76 @@ import stan.block.note.core.Unit;
 
 import stan.block.note.ui.cells.UnitCell;
 import stan.block.note.ui.panes.EditUnitBox;
+import stan.block.note.ui.panes.MainTopBox;
 
 import stan.block.note.listeners.ui.cells.IUnitCellListener;
 import stan.block.note.listeners.ui.panes.IEditUnitBoxListener;
+import stan.block.note.listeners.ui.panes.IMainTopBoxListener;
+
+import stan.block.note.models.cells.main.MainListUnit;
+import stan.block.note.models.cells.main.MainListBlockUnit;
+import stan.block.note.models.cells.main.MainListTableUnit;
 
 public class BNPane
     extends VBox
 {
     //VIEWS
-    Button back = new Button();
-    Button close = new Button();
     Button putNewBlock = new Button();
     Button putNewTable = new Button();
-    Label blockName = new Label();
-    Label tableName = new Label();
+    MainTopBox mainTopBox;
     //
     StackPane editUnit = new StackPane();
     EditUnitBox editBox;
     //
-    ListView<Unit> listView;
+    ListView<MainListUnit> listView;
 
+	//FIELDS
+    private String actualTableId;
+	
     public BNPane()
     {
         super();
         this.setStyle("-fx-background-color: null");
         //this.getChildren().addAll(initTestPane());
-        this.getChildren().addAll(initTopPane(), initMainPane());
+		mainTopBox = new MainTopBox(new IMainTopBoxListener()
+        {
+            public void back()
+            {
+            }
+            public void close()
+            {
+            }
+        });
+        mainTopBox.setMinHeight(36);
+        this.getChildren().addAll(mainTopBox, initMainPane());
         init();
     }
     private void init()
     {
-        tableName.setVisible(false);
+		actualTableId = null;
         refresh();
     }
     private void refresh()
     {
-        BNCore.getInstance().openBlockNote("E:/Downloads/blocknote/test.star");
+        BNCore.getInstance().openBlockNote("test.star");
         Block block = BNCore.getInstance().getActualBlock();
-        blockName.setText(block.name);
+		mainTopBox.setBlock(block.name, block.color);
+		if(actualTableId != null)
+		{
+			Table table = BNCore.getInstance().getTable(actualTableId);
+			if(table == null)
+			{
+				actualTableId = null;
+				mainTopBox.clearTable();
+			}
+			else
+			{
+				mainTopBox.setTable(table.name, table.color);
+			}
+		}
         setListUnits(block);
     }
 
-    private HBox initTestPane()
-    {
-        HBox hbox = new HBox(10);
-        hbox.setStyle("-fx-background-color: green");
-        Label field = new Label();
-        field.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(field, Priority.ALWAYS);
-        hbox.getChildren().addAll(
-            new Label("Search:"), field, new Button("Go")
-        );
-        return hbox;
-    }
-    private HBox initTopPane()
-    {
-        int boxH = 36;
-        HBox blockTop = new HBox();
-        blockTop.setMinHeight(boxH);
-        blockTop.setStyle("-fx-background-color: green");
-        //
-        back.setId("back_button");
-        back.setMinWidth(boxH);
-        back.prefHeightProperty().bind(blockTop.heightProperty());
-        //
-        //blockName.setText("blockName nameaaaaaaaaaaaaaaaaaaaaaa!!!!---+!");
-        blockName.setStyle("-fx-background-color: orange");
-        blockName.prefHeightProperty().bind(blockTop.heightProperty());
-        //blockName.prefWidthProperty().bind(blockTop.widthProperty());
-        HBox.setHgrow(blockName, Priority.ALWAYS);
-        blockName.setMinWidth(256);
-        blockName.setMaxWidth(Double.MAX_VALUE);
-        //
-        tableName.setText("tableName nameaaaaaaaaaaaaaaaaaaaaaa!!!!---+aaaaaaaaaaaaaaaaaaaaaaa!");
-        tableName.setStyle("-fx-background-color: pink");
-        tableName.prefHeightProperty().bind(blockTop.heightProperty());
-        tableName.prefWidthProperty().bind(blockTop.widthProperty());
-        tableName.managedProperty().bind(tableName.visibleProperty());
-        //tableName.setVisible(false);
-        //
-        close.setId("close_button");
-        close.setMinWidth(boxH);
-        close.prefHeightProperty().bind(blockTop.heightProperty());
-        //
-        blockTop.getChildren().addAll(back, blockName, tableName, close);
-        //blockTop.getChildren().addAll(back, blockName, close);
-        return blockTop;
-    }
     private HBox initMainPane()
     {
         HBox blockMain = new HBox();
@@ -175,16 +162,28 @@ public class BNPane
         //blockLeft.getChildren().addAll(listView);
         return blockLeft;
     }
-    private ListView<Unit> initListView()
+    private ListView<MainListUnit> initListView()
     {
-        ListView<Unit> list = new ListView<Unit>();
-        list.setCellFactory(new Callback<ListView<Unit>, ListCell<Unit>>()
+        ListView<MainListUnit> list = new ListView<MainListUnit>();
+        list.setCellFactory(new Callback<ListView<MainListUnit>, ListCell<MainListUnit>>()
         {
             @Override
-            public ListCell<Unit> call(ListView<Unit> list)
+            public ListCell<MainListUnit> call(ListView<MainListUnit> list)
             {
                 return new UnitCell(new IUnitCellListener()
                 {
+                    @Override
+                    public void select(Unit item)
+                    {
+						if(item instanceof Block)
+						{
+						}
+						else if(item instanceof Table)
+						{
+							actualTableId = item.id;
+						}
+						refresh();
+                    }
                     @Override
                     public void editUnit(Unit item)
                     {
@@ -247,16 +246,21 @@ public class BNPane
 
     private void setListUnits(Block block)
     {
-        List<Unit> list = new ArrayList<Unit>();
+        List<MainListUnit> list = new ArrayList<MainListUnit>();
         for(int i = 0; i < block.blocks.size(); i++)
         {
-            list.add(block.blocks.get(i));
+            list.add(new MainListBlockUnit(block.blocks.get(i)));
         }
         for(int i = 0; i < block.tables.size(); i++)
         {
-            list.add(block.tables.get(i));
+			boolean select = false;
+			if(actualTableId != null)
+			{
+				select = actualTableId.equals(block.tables.get(i).id);
+			}
+            list.add(new MainListTableUnit(block.tables.get(i), select));
         }
-        ObservableList<Unit> items = FXCollections.observableList(list);
+        ObservableList<MainListUnit> items = FXCollections.observableList(list);
         listView.setItems(null);
         listView.setItems(items);
     }

@@ -101,6 +101,31 @@ public class BNCore
         }
         return block;
     }
+    public Table getTable(String id)
+    {
+		Table table = null;
+        HashMap map = getTableHashMap(id);
+		if(map != null)
+		{
+			table = getTableFromMap(map);
+		}
+		return table;
+	}
+    private HashMap getTableHashMap(String id)
+    {
+        HashMap map = getActualHashMap();
+		ArrayList tables = (ArrayList)map.get("tables");
+		for(int i = 0; i < tables.size(); i++)
+		{
+			HashMap table = (HashMap)tables.get(i);
+			String tableId = (String)table.get("id");
+			if(tableId.equals(id))
+			{
+				return table;
+			}
+		}
+        return null;
+	}
     private HashMap getBlock(ArrayList blocks, String id)
     {
         for(int i = 0; i < blocks.size(); i++)

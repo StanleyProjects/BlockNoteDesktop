@@ -84,7 +84,7 @@
 }
 #main_list_cell
 {
-    -fx-background-color: white;
+    -fx-background-color: #ffffff;
     -fx-background-radius: 0;
 }
 #main_list_cell:hover {
@@ -110,6 +110,14 @@
 {
     -fx-background-image: url("../res/ico/close.png");
 }
+#main_top_block_name, #main_top_table_name
+{
+	-fx-text-fill: #ffffff;
+    -fx-background-color: null;
+    -fx-font-family: Roboto;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+}
 #back_button, #close_button
 {
     -fx-background-repeat: no-repeat no-repeat;
@@ -119,11 +127,11 @@
 }
 #back_button:hover, #close_button:hover
 {
-    -fx-background-color: #ffaa55;
+    -fx-background-color: rgba(255,255,255,0.2);
 }
 #back_button:pressed, #close_button:pressed
 {
-    -fx-background-color: #ffeedd;
+    -fx-background-color: rgba(255,255,255,0.4);
 }
 
 #put_new_block_button, #put_new_table_button
