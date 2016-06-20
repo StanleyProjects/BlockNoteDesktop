@@ -39,12 +39,39 @@ public class BNCore
 
     private String path;
     private HashMap main;
-    private List<Integer> idTree;
+    //private List<Integer> idTree;
+    private List<String> idTree;
 
     private BNCore()
     {
     }
 
+    public boolean isHead()
+    {
+		return idTree.size() == 0;
+	}
+    public void backActualBlock()
+    {
+		if(isHead())
+		{
+			return;
+		}
+		idTree.remove(idTree.size()-1);
+	}
+    public void setActualBlock(String id)
+    {
+        HashMap block = getActualHashMap();
+		ArrayList blocks = (ArrayList)block.get("blocks");
+		if(blocks == null || blocks.size() <= 0)
+		{
+			return;
+		}
+		HashMap newBlock = getBlock(blocks, id);
+		if(newBlock != null)
+		{
+			idTree.add(id);
+		}
+	}
     public Block getActualBlock()
     {
         Block block = null;
@@ -90,7 +117,8 @@ public class BNCore
         for(int i = 0; i < idTree.size(); i++)
         {
             blocks = (ArrayList)block.get("blocks");
-            if(blocks != null && blocks.size() > 0 && blocks.size() <= idTree.get(i))
+            //if(blocks != null && blocks.size() > 0 && blocks.size() <= idTree.get(i))
+            if(blocks != null && blocks.size() > 0)
             {
                 block = getBlock(blocks, idTree.get(i));
             }
@@ -138,10 +166,12 @@ public class BNCore
         }
         return null;
     }
+	/*
     private HashMap getBlock(ArrayList blocks, int num)
     {
         return (HashMap)blocks.get(num);
     }
+	*/
 
     private void updateDates()
     {
@@ -152,7 +182,16 @@ public class BNCore
         if(next + 1 < idTree.size())
         {
             ArrayList blocks = (ArrayList)block.get("blocks");
-            updateDates((HashMap)blocks.get(idTree.get(next)), next + 1);
+			for(int i = 0; i < blocks.size(); i++)
+			{
+				HashMap tmp = (HashMap)blocks.get(i);
+				String id = (String)tmp.get("id");
+				if(id.equals(idTree.get(next)))
+				{
+					updateDates(tmp, next + 1);
+					break;
+				}
+			}
         }
         updateDates(block);
     }
@@ -191,12 +230,12 @@ public class BNCore
 	}
 
 
-    public void openBlockNote(String fullPath)
+    public void updateData()
     {
         ZipFile zf = null;
         try
         {
-            zf = new ZipFile(fullPath);
+            zf = new ZipFile(path);
         }
         catch(Exception e)
         {
@@ -211,7 +250,11 @@ public class BNCore
         {
             System.out.println("getMapFromString - " + e.getMessage());
         }
+	}
+    public void openBlockNote(String fullPath)
+    {
         path = fullPath;
+		updateData();
         idTree = new ArrayList<>();
     }
     private ZipEntry getZipEntryFromName(ZipFile zf, String name)

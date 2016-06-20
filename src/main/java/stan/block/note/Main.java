@@ -25,7 +25,7 @@ public class Main
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         //primaryStage.setAlwaysOnTop(true);
         Rectangle2D screen = Screen.getPrimary().getVisualBounds();
-        primaryStage.setScene(new Scene(new BNPane(), screen.getWidth(), screen.getHeight(), Color.BLUE));
+        primaryStage.setScene(new Scene(new BNPane(), screen.getWidth(), screen.getHeight(), Color.TRANSPARENT));
         primaryStage.getScene().getStylesheets().add("css/theme.css");
         primaryStage.show();
     }

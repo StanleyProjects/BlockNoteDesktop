@@ -110,6 +110,11 @@
 {
     -fx-background-image: url("../res/ico/close.png");
 }
+#main_top_table_name_test
+{
+	-fx-border-color: transparent white transparent white;
+	-fx-border-width: 0 2 0 2;
+}
 #main_top_block_name, #main_top_table_name
 {
 	-fx-text-fill: #ffffff;

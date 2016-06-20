@@ -42,6 +42,7 @@ public class MainTopBox
         back.setId("back_button");
         back.setMinWidth(boxH);
         back.prefHeightProperty().bind(this.heightProperty());
+        back.managedProperty().bind(back.visibleProperty());
         back.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -57,13 +58,13 @@ public class MainTopBox
         blockName.setMinWidth(444);
         blockName.setMaxWidth(Double.MAX_VALUE);
 		blockName.setTextFill(Color.web("white"));
-        blockName.setPadding(new Insets(0, 0, 0, 4));
+        blockName.setPadding(new Insets(0, 0, 0, 6));
         //
         tableName.setId("main_top_table_name");
         tableName.prefHeightProperty().bind(this.heightProperty());
         tableName.prefWidthProperty().bind(this.widthProperty());
         tableName.managedProperty().bind(tableName.visibleProperty());
-        tableName.setPadding(new Insets(0, 0, 0, 4));
+        tableName.setPadding(new Insets(0, 0, 0, 6));
         tableName.setVisible(false);
         //
         close.setId("close_button");
@@ -81,6 +82,10 @@ public class MainTopBox
         this.getChildren().addAll(back, blockName, tableName, close);
     }
 	
+	public void setVisibleBack(boolean v)
+	{
+        back.setVisible(v);
+	}
 	public void setBlock(String name, String color)
 	{
         blockName.setText(name);

@@ -73,6 +73,8 @@ public class BNPane
         {
             public void back()
             {
+				BNCore.getInstance().backActualBlock();
+				refresh();
             }
             public void close()
             {
@@ -84,12 +86,13 @@ public class BNPane
     }
     private void init()
     {
+        BNCore.getInstance().openBlockNote("test.star");
 		actualTableId = null;
         refresh();
     }
     private void refresh()
     {
-        BNCore.getInstance().openBlockNote("test.star");
+        BNCore.getInstance().updateData();
         Block block = BNCore.getInstance().getActualBlock();
 		mainTopBox.setBlock(block.name, block.color);
 		if(actualTableId != null)
@@ -105,13 +108,21 @@ public class BNPane
 				mainTopBox.setTable(table.name, table.color);
 			}
 		}
+		if(BNCore.getInstance().isHead())
+		{
+			mainTopBox.setVisibleBack(false);
+		}
+		else
+		{
+			mainTopBox.setVisibleBack(true);
+		}
         setListUnits(block);
     }
 
     private HBox initMainPane()
     {
         HBox blockMain = new HBox();
-        blockMain.setStyle("-fx-background-color: purple");
+        blockMain.setStyle("-fx-background-color: null");
         VBox.setVgrow(blockMain, Priority.ALWAYS);
         blockMain.getChildren().addAll(initLeftPane(), initRightPane());
         return blockMain;
@@ -122,7 +133,7 @@ public class BNPane
         int boxH = 36;
         int boxW = 192;
         StackPane blockLeft = new StackPane();
-        blockLeft.setStyle("-fx-background-color: red");
+        blockLeft.setStyle("-fx-background-color: white");
         blockLeft.setPrefWidth(boxW);
         //
         listView = initListView();
@@ -177,6 +188,7 @@ public class BNPane
                     {
 						if(item instanceof Block)
 						{
+                        	BNCore.getInstance().setActualBlock(item.id);
 						}
 						else if(item instanceof Table)
 						{
@@ -210,7 +222,7 @@ public class BNPane
     private StackPane initRightPane()
     {
         StackPane blockRight = new StackPane();
-        blockRight.setStyle("-fx-background-color: orange");
+        blockRight.setStyle("-fx-background-color: white");
         HBox.setHgrow(blockRight, Priority.ALWAYS);
         //
         editUnit.setStyle("-fx-background-color: rgba(0,0,0,0.5)");
