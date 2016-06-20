@@ -71,6 +71,10 @@ public class BNPane
         //this.getChildren().addAll(initTestPane());
 		mainTopBox = new MainTopBox(new IMainTopBoxListener()
         {
+            public void edit()
+            {
+            	showEdit(BNCore.getInstance().getActualBlock());
+            }
             public void back()
             {
 				BNCore.getInstance().backActualBlock();
@@ -86,7 +90,7 @@ public class BNPane
     }
     private void init()
     {
-        BNCore.getInstance().openBlockNote("test.star");
+        BNCore.getInstance().openBlockNote("E:/Downloads/stanleyprojects/blocknote/test.star");
 		actualTableId = null;
         refresh();
     }
@@ -110,11 +114,11 @@ public class BNPane
 		}
 		if(BNCore.getInstance().isHead())
 		{
-			mainTopBox.setVisibleBack(false);
+			mainTopBox.setVisibleHead(false);
 		}
 		else
 		{
-			mainTopBox.setVisibleBack(true);
+			mainTopBox.setVisibleHead(true);
 		}
         setListUnits(block);
     }

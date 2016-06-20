@@ -166,12 +166,6 @@ public class BNCore
         }
         return null;
     }
-	/*
-    private HashMap getBlock(ArrayList blocks, int num)
-    {
-        return (HashMap)blocks.get(num);
-    }
-	*/
 
     private void updateDates()
     {
@@ -440,8 +434,9 @@ public class BNCore
     public void editBlock(String id, String name, String color)
     {
         HashMap map = getActualHashMap();
-        if(map == null)
+        if(map.get("id").equals(id))
         {
+            editUnit(map, name, color);
             return;
         }
         ArrayList blocks = (ArrayList)map.get("blocks");

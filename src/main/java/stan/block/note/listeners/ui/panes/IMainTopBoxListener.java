@@ -5,5 +5,6 @@ import stan.block.note.core.Unit;
 public interface IMainTopBoxListener
 {
     void back();
+    void edit();
     void close();
 }

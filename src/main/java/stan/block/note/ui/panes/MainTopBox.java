@@ -20,6 +20,7 @@ public class MainTopBox
 {
     //VIEWS
     private Button back = new Button();
+    private Button edit = new Button();
     private Button close = new Button();
     private Label blockName = new Label();
     private Label tableName = new Label();
@@ -52,6 +53,19 @@ public class MainTopBox
             }
         });
         //
+        edit.setId("edit_button");
+        edit.setMinWidth(boxH);
+        edit.prefHeightProperty().bind(this.heightProperty());
+        edit.managedProperty().bind(edit.visibleProperty());
+        edit.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                listener.edit();
+            }
+        });
+        //
         blockName.setId("main_top_block_name");
         blockName.prefHeightProperty().bind(this.heightProperty());
         HBox.setHgrow(blockName, Priority.ALWAYS);
@@ -79,12 +93,13 @@ public class MainTopBox
             }
         });
         //
-        this.getChildren().addAll(back, blockName, tableName, close);
+        this.getChildren().addAll(back, edit, blockName, tableName, close);
     }
 	
-	public void setVisibleBack(boolean v)
+	public void setVisibleHead(boolean v)
 	{
         back.setVisible(v);
+        edit.setVisible(!v);
 	}
 	public void setBlock(String name, String color)
 	{

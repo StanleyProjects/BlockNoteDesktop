@@ -102,6 +102,10 @@
     -fx-image: url("../res/ico/done.png");
 }
 
+#edit_button
+{
+    -fx-background-image: url("../res/ico/edit.png");
+}
 #back_button
 {
     -fx-background-image: url("../res/ico/back.png");
@@ -123,18 +127,18 @@
     -fx-font-size: 14;
     -fx-font-weight: bold;
 }
-#back_button, #close_button
+#back_button, #close_button, #edit_button
 {
     -fx-background-repeat: no-repeat no-repeat;
     -fx-background-position: center center;
     -fx-background-color: null;
     -fx-background-radius: 0;
 }
-#back_button:hover, #close_button:hover
+#back_button:hover, #close_button:hover, #edit_button:hover
 {
     -fx-background-color: rgba(255,255,255,0.2);
 }
-#back_button:pressed, #close_button:pressed
+#back_button:pressed, #close_button:pressed, #edit_button:pressed
 {
     -fx-background-color: rgba(255,255,255,0.4);
 }
