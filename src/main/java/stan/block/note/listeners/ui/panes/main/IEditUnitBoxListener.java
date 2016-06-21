@@ -1,4 +1,4 @@
-package stan.block.note.listeners.ui.panes;
+package stan.block.note.listeners.ui.panes.main;
 
 import stan.block.note.core.Unit;
 

@@ -1,4 +1,4 @@
-package stan.block.note.ui.panes;
+package stan.block.note.ui.panes.main;
 
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
@@ -13,7 +13,7 @@ import javafx.scene.layout.Priority;
 
 import javafx.scene.paint.Color;
 
-import stan.block.note.listeners.ui.panes.IMainTopBoxListener;
+import stan.block.note.listeners.ui.panes.main.IMainTopBoxListener;
 
 public class MainTopBox
     extends HBox
@@ -32,7 +32,7 @@ public class MainTopBox
     {
         super();
         this.listener = l;
-        this.setId("edit_unit_box");
+        //this.setId("edit_unit_box");
 		initViews();
     }
     private void initViews()

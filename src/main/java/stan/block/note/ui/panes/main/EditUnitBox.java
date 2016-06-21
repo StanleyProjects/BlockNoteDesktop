@@ -1,4 +1,4 @@
-package stan.block.note.ui.panes;
+package stan.block.note.ui.panes.main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import javafx.scene.shape.Rectangle;
 import stan.block.note.core.Colors;
 import stan.block.note.core.Unit;
 
-import stan.block.note.listeners.ui.panes.IEditUnitBoxListener;
+import stan.block.note.listeners.ui.panes.main.IEditUnitBoxListener;
 
 public class EditUnitBox
     extends VBox

@@ -31,6 +31,19 @@
     -fx-max-height: 56px;
 }
 
+#start_screen
+{
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, #000000, 5, 0, 0, 0);
+}
+#open_button
+{
+}
+#exit_button
+{
+    -fx-background-image: url("../res/ico/exit.png");
+}
+
 #edit_unit_box
 {
     -fx-background-color: #ffffff;
@@ -119,7 +132,7 @@
 	-fx-border-color: transparent white transparent white;
 	-fx-border-width: 0 2 0 2;
 }
-#main_top_block_name, #main_top_table_name
+#main_top_block_name, #main_top_table_name, #start_top_app_name
 {
 	-fx-text-fill: #ffffff;
     -fx-background-color: null;
@@ -127,20 +140,53 @@
     -fx-font-size: 14;
     -fx-font-weight: bold;
 }
-#back_button, #close_button, #edit_button
+#back_button, #close_button, #edit_button, #exit_button
 {
     -fx-background-repeat: no-repeat no-repeat;
     -fx-background-position: center center;
     -fx-background-color: null;
     -fx-background-radius: 0;
 }
-#back_button:hover, #close_button:hover, #edit_button:hover
+#back_button:hover, #close_button:hover, #edit_button:hover, #exit_button:hover
 {
     -fx-background-color: rgba(255,255,255,0.2);
 }
-#back_button:pressed, #close_button:pressed, #edit_button:pressed
+#back_button:pressed, #close_button:pressed, #edit_button:pressed, #exit_button:pressed
 {
     -fx-background-color: rgba(255,255,255,0.4);
+}
+
+#circle_back
+{
+    -fx-effect: dropshadow(three-pass-box, #202020, 3, 0, 0, 0);
+    -fx-background-radius: 5em;
+    -fx-min-width: 42px;
+    -fx-min-height: 42px;
+    -fx-max-width: 42px;
+    -fx-max-height: 42px;
+}
+#open_block_note:hover
+{
+    -fx-background-color: rgba(255,255,255,0.2);
+}
+#open_block_note:pressed
+{
+    -fx-background-color: rgba(255,255,255,0.4);
+}
+#open_block_note
+{
+    -fx-background-image: url("../res/ico/open.png");
+}
+#open_block_note, #new_block_note
+{
+    -fx-background-color: null;
+    -fx-background-repeat: no-repeat no-repeat;
+    -fx-background-position: center center;
+    -fx-background-radius: 5em;
+    -fx-min-width: 42px;
+    -fx-min-height: 42px;
+    -fx-max-width: 42px;
+    -fx-max-height: 42px;
 }
 
 #put_new_block_button, #put_new_table_button

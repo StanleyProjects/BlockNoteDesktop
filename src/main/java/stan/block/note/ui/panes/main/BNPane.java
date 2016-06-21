@@ -1,4 +1,4 @@
-package stan.block.note.ui.panes;
+package stan.block.note.ui.panes.main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +37,11 @@ import stan.block.note.core.Table;
 import stan.block.note.core.Unit;
 
 import stan.block.note.ui.cells.UnitCell;
-import stan.block.note.ui.panes.EditUnitBox;
-import stan.block.note.ui.panes.MainTopBox;
 
 import stan.block.note.listeners.ui.cells.IUnitCellListener;
-import stan.block.note.listeners.ui.panes.IEditUnitBoxListener;
-import stan.block.note.listeners.ui.panes.IMainTopBoxListener;
+import stan.block.note.listeners.ui.panes.main.IBNPaneListener;
+import stan.block.note.listeners.ui.panes.main.IEditUnitBoxListener;
+import stan.block.note.listeners.ui.panes.main.IMainTopBoxListener;
 
 import stan.block.note.models.cells.main.MainListUnit;
 import stan.block.note.models.cells.main.MainListBlockUnit;
@@ -62,6 +61,7 @@ public class BNPane
     ListView<MainListUnit> listView;
 
 	//FIELDS
+    private IBNPaneListener listener;
     private String actualTableId;
 	
     public BNPane()
@@ -82,15 +82,16 @@ public class BNPane
             }
             public void close()
             {
+				listener.close();
             }
         });
         mainTopBox.setMinHeight(36);
         this.getChildren().addAll(mainTopBox, initMainPane());
-        init();
     }
-    private void init()
+    public void init(IBNPaneListener l, String path)
     {
-        BNCore.getInstance().openBlockNote("E:/Downloads/stanleyprojects/blocknote/test.star");
+		listener = l;
+        BNCore.getInstance().openBlockNote(path);
 		actualTableId = null;
         refresh();
     }
@@ -99,7 +100,11 @@ public class BNPane
         BNCore.getInstance().updateData();
         Block block = BNCore.getInstance().getActualBlock();
 		mainTopBox.setBlock(block.name, block.color);
-		if(actualTableId != null)
+		if(actualTableId == null)
+		{
+			mainTopBox.clearTable();
+		}
+		else
 		{
 			Table table = BNCore.getInstance().getTable(actualTableId);
 			if(table == null)

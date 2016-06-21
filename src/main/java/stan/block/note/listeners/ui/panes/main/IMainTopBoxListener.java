@@ -1,6 +1,4 @@
-package stan.block.note.listeners.ui.panes;
-
-import stan.block.note.core.Unit;
+package stan.block.note.listeners.ui.panes.main;
 
 public interface IMainTopBoxListener
 {
