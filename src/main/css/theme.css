@@ -44,6 +44,11 @@
     -fx-background-image: url("../res/ico/exit.png");
 }
 
+#note_box
+{
+    -fx-effect: dropshadow(three-pass-box, #000000, 3, 0, 0, 0);
+}
+
 #edit_unit_box
 {
     -fx-background-color: #ffffff;

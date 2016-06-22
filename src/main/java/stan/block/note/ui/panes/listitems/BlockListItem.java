@@ -10,7 +10,7 @@ import javafx.scene.layout.Priority;
 
 import javafx.scene.paint.Color;
 
-import stan.block.note.core.Block;
+import stan.block.note.core.units.Block;
 
 public class BlockListItem
     extends HBox

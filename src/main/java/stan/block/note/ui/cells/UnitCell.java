@@ -15,8 +15,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 import stan.block.note.core.Unit;
-import stan.block.note.core.Block;
-import stan.block.note.core.Table;
+import stan.block.note.core.units.Block;
+import stan.block.note.core.units.Table;
 
 import stan.block.note.listeners.ui.cells.IUnitCellListener;
 

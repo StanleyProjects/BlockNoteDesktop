@@ -1,6 +1,6 @@
 package stan.block.note.models.cells.main;
 
-import stan.block.note.core.Block;
+import stan.block.note.core.units.Block;
 
 public class MainListBlockUnit
 	extends MainListUnit

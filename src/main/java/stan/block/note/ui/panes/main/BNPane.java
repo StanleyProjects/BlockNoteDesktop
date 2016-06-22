@@ -32,8 +32,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
 
 import stan.block.note.core.BNCore;
-import stan.block.note.core.Block;
-import stan.block.note.core.Table;
+import stan.block.note.core.units.Block;
+import stan.block.note.core.units.Table;
 import stan.block.note.core.Unit;
 
 import stan.block.note.ui.cells.UnitCell;
@@ -55,6 +55,7 @@ public class BNPane
     Button putNewTable = new Button();
     MainTopBox mainTopBox;
     //
+    NotesPane notesPane;
     StackPane editUnit = new StackPane();
     EditUnitBox editBox;
     //
@@ -111,10 +112,12 @@ public class BNPane
 			{
 				actualTableId = null;
 				mainTopBox.clearTable();
+                notesPane.hide();
 			}
 			else
 			{
 				mainTopBox.setTable(table.name, table.color);
+                notesPane.show(table);
 			}
 		}
 		if(BNCore.getInstance().isHead())
@@ -198,12 +201,16 @@ public class BNPane
 						if(item instanceof Block)
 						{
                         	BNCore.getInstance().setActualBlock(item.id);
+                            refresh();
 						}
 						else if(item instanceof Table)
 						{
-							actualTableId = item.id;
+                            if(actualTableId == null || !actualTableId.equals(item.id))
+                            {
+                                actualTableId = item.id;
+                                refresh();
+                            }
 						}
-						refresh();
                     }
                     @Override
                     public void editUnit(Unit item)
@@ -261,7 +268,10 @@ public class BNPane
         editUnit.getChildren().addAll(editBox);
         editUnit.setVisible(false);
         //
-        blockRight.getChildren().addAll(editUnit);
+        notesPane = new NotesPane();
+        notesPane.hide();
+        //
+        blockRight.getChildren().addAll(notesPane, editUnit);
         return blockRight;
     }
 

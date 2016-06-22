@@ -18,6 +18,11 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import stan.block.note.core.notes.Note;
+import stan.block.note.core.notes.cases.SingleLineText;
+import stan.block.note.core.units.Block;
+import stan.block.note.core.units.Table;
+
 import stan.block.note.helpers.FileHelper;
 import stan.block.note.helpers.json.JSONWriter;
 import stan.block.note.helpers.json.JSONParser;
@@ -131,14 +136,26 @@ public class BNCore
     }
     public Table getTable(String id)
     {
-		Table table = null;
+        Table table = null;
         HashMap map = getTableHashMap(id);
-		if(map != null)
-		{
-			table = getTableFromMap(map);
-		}
-		return table;
-	}
+        if(map != null)
+        {
+            table = getTableFromMap(map);
+            table.notes = new ArrayList<>();
+            ArrayList notes = (ArrayList)map.get("notes");
+            for(int i = 0; i < notes.size(); i++)
+            {
+            }
+            //
+            Note test = new Note();
+            test.cases = new ArrayList<>();
+            SingleLineText testCase = new SingleLineText();
+            testCase.setText("lalala test");
+            test.cases.add(testCase);
+            table.notes.add(test);
+        }
+        return table;
+    }
     private HashMap getTableHashMap(String id)
     {
         HashMap map = getActualHashMap();

@@ -7,7 +7,7 @@ import javafx.scene.layout.HBox;
 
 import javafx.scene.paint.Color;
 
-import stan.block.note.core.Table;
+import stan.block.note.core.units.Table;
 
 public class TableListItem
     extends HBox
