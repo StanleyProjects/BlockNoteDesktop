@@ -4,9 +4,18 @@
 .text-area, .text-area .viewport, .text-area .content {
     -fx-background-color: null;
 }
-.text-area .scroll-bar:vertical:disabled {
-    -fx-opacity: 0;
+.text-area .scroll-bar:horizontal .track,
+.text-area .scroll-bar:horizontal .thumb,
+.text-area .scroll-bar:horizontal .increment-arrow,
+.text-area .scroll-bar:horizontal .decrement-arrow,
+.text-area .scroll-bar:horizontal .increment-button,
+.text-area .scroll-bar:horizontal .decrement-button,
+.text-area .scroll-bar:horizontal:disabled,
+.text-area .scroll-bar:horizontal
+{
+    -fx-background-color: null;
 }
+
 .list-view {   
     -fx-background-color: transparent;
     -fx-background-radius: 0;

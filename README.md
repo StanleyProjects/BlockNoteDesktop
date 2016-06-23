@@ -16,3 +16,8 @@ BlockNote desktop app JavaFX
 
 ## run Java7
 > "%JAVA_HOME%/bin/java" -classpath "%JAVA_HOME%/jre/lib/jfxrt.jar";lib/*;bin stan.block.note.Main
+
+## makeall
+create dist for launch without java
+now need add res manually
+> "%JAVA_HOME%/bin/javapackager" -makeall -name BlockNote -appclass stan.block.note.Main
