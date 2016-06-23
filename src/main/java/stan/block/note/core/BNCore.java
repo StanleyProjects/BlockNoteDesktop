@@ -19,6 +19,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import stan.block.note.core.notes.Note;
+import stan.block.note.core.notes.cases.MultiLineText;
 import stan.block.note.core.notes.cases.SingleLineText;
 import stan.block.note.core.units.Block;
 import stan.block.note.core.units.Table;
@@ -149,8 +150,8 @@ public class BNCore
             //
             Note test = new Note();
             test.cases = new ArrayList<>();
-            SingleLineText testCase = new SingleLineText();
-            testCase.setText("lalala test");
+            MultiLineText testCase = new MultiLineText();
+            testCase.setText("lalala test\nmulti :)\n3 line");
             test.cases.add(testCase);
             table.notes.add(test);
         }

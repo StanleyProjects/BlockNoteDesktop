@@ -25,7 +25,6 @@ public class NotesPane
     public NotesPane()
     {
         super();
-        //this.setId("notes_pane");
         this.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.BLACK,3,0,0,0));
     }
 
@@ -33,7 +32,7 @@ public class NotesPane
     {
         this.getChildren().remove(notesBoxes);
         notesBoxes = new Pane();
-        notesBoxes.setStyle("-fx-background-color: rgba(255,255,255,0.9)");
+        notesBoxes.setStyle("-fx-background-color: rgba(255,255,255,0.6)");
         notesBoxes.prefWidthProperty().bind(this.widthProperty());
         notesBoxes.prefHeightProperty().bind(this.heightProperty());
         NoteBox noteBox = new NoteBox(notes.get(0));

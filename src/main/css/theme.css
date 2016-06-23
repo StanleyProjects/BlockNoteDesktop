@@ -1,7 +1,12 @@
 @font-face {
     src: url("../res/fonts/Roboto-Medium.ttf");
 }
-
+.text-area, .text-area .viewport, .text-area .content {
+    -fx-background-color: null;
+}
+.text-area .scroll-bar:vertical:disabled {
+    -fx-opacity: 0;
+}
 .list-view {   
     -fx-background-color: transparent;
     -fx-background-radius: 0;
