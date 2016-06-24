@@ -228,17 +228,29 @@ public class BNCore
     }
     private HashMap createEmptyUnit(String name)
     {
-        long create = new Date().getTime();
         HashMap map = new HashMap<String, Object>();
-        map.put("id", UUID.randomUUID().toString());
+        map.put("id", UUID.randomUUID().toString() + "-" + UUID.randomUUID().toString());
         map.put("name", name);
         map.put("color", Colors.RED);
+        map.put("dates", createNewDates());
+        return map;
+	}
+    private HashMap createEmptyNote()
+    {
+        HashMap map = new HashMap<String, Object>();
+        map.put("id", UUID.randomUUID().toString() + "-" + UUID.randomUUID().toString());
+        map.put("color", Colors.RED);
+        map.put("dates", createNewDates());
+        return map;
+    }
+    private HashMap createNewDates()
+    {
+        long create = new Date().getTime();
         HashMap dates = new HashMap<String, Object>();
         dates.put("create", create);
         dates.put("update", create);
         dates.put("sync", -1);
-        map.put("dates", dates);
-        return map;
+		return dates;
 	}
 
 

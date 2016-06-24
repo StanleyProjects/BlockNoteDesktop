@@ -136,9 +136,11 @@ public class EditUnitBox
     private void initListColorSelects()
     {
         listColorSelects = new ArrayList<ColorSelect>();
-        listColorSelects.add(new ColorSelect(Colors.RED));
         listColorSelects.add(new ColorSelect(Colors.BLUE));
+        listColorSelects.add(new ColorSelect(Colors.GREEN));
+        listColorSelects.add(new ColorSelect(Colors.RED));
         listColorSelects.add(new ColorSelect(Colors.ORANGE));
+        listColorSelects.add(new ColorSelect(Colors.PURPLE));
     }
     private void refreshList()
     {
