@@ -58,6 +58,27 @@
     -fx-background-image: url("../res/ico/exit.png");
 }
 
+#move_note
+{
+    -fx-background-color: #ffffff;
+    -fx-background-repeat: no-repeat no-repeat;
+    -fx-background-position: center center;
+    -fx-background-image: url("../res/ico/move.png");
+    -fx-effect: dropshadow(three-pass-box, #000000, 3, 0, 0, 0);
+    -fx-background-radius: 5em;
+    -fx-min-width: 24px;
+    -fx-min-height: 24px;
+    -fx-max-width: 24px;
+    -fx-max-height: 24px;
+}
+#move_note:hover
+{
+    -fx-background-color: #505050;
+}
+#move_note:pressed
+{
+    -fx-background-color: #202020;
+}
 #note_box
 {
     -fx-effect: dropshadow(three-pass-box, #000000, 3, 0, 0, 0);

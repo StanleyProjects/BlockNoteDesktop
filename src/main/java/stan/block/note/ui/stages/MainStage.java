@@ -47,7 +47,7 @@ public class MainStage
 				StartScreenStage.getInstance().showStartScreen();
 			}
 		};
-        this.setScene(new Scene(bnpane, screen.getWidth(), screen.getHeight(), Color.TRANSPARENT));
+        this.setScene(new Scene(bnpane, screen.getWidth()/2, screen.getHeight()/2, Color.TRANSPARENT));
         this.getScene().getStylesheets().add("css/theme.css");
     }
 
