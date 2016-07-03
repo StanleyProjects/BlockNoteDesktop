@@ -81,6 +81,13 @@ public class NoteBox
         StackPane.setMargin(back, new Insets(14));
         //StackPane.setAlignment(back,Pos.CENTER);
         move.setId("move_note");
+        move.setOnMouseReleased(new EventHandler<MouseEvent>()
+        {
+            public void handle(MouseEvent event)
+            {
+                listener.moveEnd();
+            }
+        });
         move.setOnMousePressed(new EventHandler<MouseEvent>()
         {
             @Override
@@ -88,6 +95,7 @@ public class NoteBox
             {
                 xOffset = getLayoutX() - event.getScreenX();
                 yOffset = getLayoutY() - event.getScreenY();
+                listener.moveBegin();
             }
         });
         move.setOnMouseDragged(new EventHandler<MouseEvent>()
@@ -95,13 +103,28 @@ public class NoteBox
             @Override
             public void handle(MouseEvent event)
             {
-                setLayoutX(event.getScreenX() + xOffset);
-                setLayoutY(event.getScreenY() + yOffset);
+                drag(event);
             }
         });
         move.setVisible(false);
         StackPane.setAlignment(move, Pos.TOP_LEFT);
         this.getChildren().addAll(back, move);
+    }
+    private void drag(MouseEvent event)
+    {
+        double x = event.getScreenX() + xOffset;
+        if(x < 0)
+        {
+            x = 0;
+        }
+        setLayoutX(x);
+        double y = event.getScreenY() + yOffset;
+        if(y < 0)
+        {
+            y = 0;
+        }
+        setLayoutY(y);
+        listener.move(getBoundsInParent().getMaxX(), getLayoutY(), NoteBox.this.getHeight());
     }
     private void initCases(List<Case> cases)
     {

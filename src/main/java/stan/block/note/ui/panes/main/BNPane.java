@@ -146,7 +146,9 @@ public class BNPane
         int boxW = 192;
         StackPane blockLeft = new StackPane();
         blockLeft.setStyle("-fx-background-color: white");
-        blockLeft.setPrefWidth(boxW);
+        //blockLeft.setPrefWidth(boxW);
+        blockLeft.setMinWidth(boxW);
+        blockLeft.setMaxWidth(boxW);
         //
         listView = initListView();
         listView.prefHeightProperty().bind(blockLeft.heightProperty());
