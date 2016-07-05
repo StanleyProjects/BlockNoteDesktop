@@ -1,6 +1,7 @@
 package stan.block.note.ui.panes.main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javafx.beans.value.ChangeListener;
@@ -14,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 
 import javafx.scene.control.Button;
@@ -38,10 +40,13 @@ import stan.block.note.core.Unit;
 
 import stan.block.note.ui.cells.UnitCell;
 
+import stan.block.note.helpers.BNDesktopSettings;
+
 import stan.block.note.listeners.ui.cells.IUnitCellListener;
 import stan.block.note.listeners.ui.panes.main.IBNPaneListener;
 import stan.block.note.listeners.ui.panes.main.IEditUnitBoxListener;
 import stan.block.note.listeners.ui.panes.main.IMainTopBoxListener;
+import stan.block.note.listeners.ui.panes.main.INotesPaneListener;
 
 import stan.block.note.models.cells.main.MainListUnit;
 import stan.block.note.models.cells.main.MainListBlockUnit;
@@ -271,6 +276,22 @@ public class BNPane
         editUnit.setVisible(false);
         //
         notesPane = new NotesPane();
+        notesPane.setListener(new INotesPaneListener()
+        {
+            public void addNew(double x, double y)
+            {
+				if(actualTableId != null)
+				{
+					HashMap settings = new HashMap<>();
+					Bounds bounds = notesPane.getBoundsInLocal();
+					Bounds screenBounds = notesPane.localToScreen(bounds);
+					settings.put("x", x - screenBounds.getMinX());
+					settings.put("y", y - screenBounds.getMinY());
+					BNCore.getInstance().putNewNote(actualTableId, BNDesktopSettings.NOTE_COORDINATE_SETTINGS, settings);
+					refresh();
+				}
+            }
+        });
         notesPane.hide();
         //
         blockRight.getChildren().addAll(notesPane, editUnit);

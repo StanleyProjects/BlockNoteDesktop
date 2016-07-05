@@ -2,8 +2,8 @@
 BlockNote desktop app JavaFX
 
     applicationId "stan.block.note"
-    versionCode 1607030500
-    versionName "0.5"
+    versionCode 1607051927
+    versionName "0.6"
 
 # Windows build information
 ## build Java8

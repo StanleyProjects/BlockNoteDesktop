@@ -146,14 +146,8 @@ public class BNCore
             ArrayList notes = (ArrayList)map.get("notes");
             for(int i = 0; i < notes.size(); i++)
             {
+				table.notes.add(getNote((HashMap)notes.get(i)));
             }
-            //
-            Note test = new Note();
-            test.cases = new ArrayList<>();
-            MultiLineText testCase = new MultiLineText();
-            testCase.setText("lalala test\nmulti :)\n3 line");
-            test.cases.add(testCase);
-            table.notes.add(test);
         }
         return table;
     }
@@ -172,6 +166,15 @@ public class BNCore
 		}
         return null;
 	}
+	public Note getNote(HashMap map)
+    {
+		Note note = new Note();
+		note.id = (String)map.get("id");
+		note.color = (String)map.get("color");
+		note.settings = (HashMap)map.get("settings");
+		note.cases = new ArrayList<>();
+        return note;
+    }
     private HashMap getBlock(ArrayList blocks, String id)
     {
         for(int i = 0; i < blocks.size(); i++)
@@ -237,10 +240,11 @@ public class BNCore
 	}
     private HashMap createEmptyNote()
     {
-        HashMap map = new HashMap<String, Object>();
+        HashMap map = new HashMap<>();
         map.put("id", UUID.randomUUID().toString() + "-" + UUID.randomUUID().toString());
         map.put("color", Colors.RED);
         map.put("dates", createNewDates());
+        map.put("settings", new HashMap<>());
         return map;
     }
     private HashMap createNewDates()
@@ -294,7 +298,7 @@ public class BNCore
         return null;
     }
     private ZipEntry getZipEntryFromName(ZipInputStream zis, String name)
-    throws IOException
+		throws IOException
     {
         ZipEntry entry = zis.getNextEntry();
         while(entry != null)
@@ -382,6 +386,38 @@ public class BNCore
         updateBlockNote();
     }
 
+    public void putNewNote(String tableId, String keySettings, HashMap mapSettings)
+    {
+        HashMap tableMap = getTableHashMap(tableId);
+        if(tableMap == null)
+        {
+            return;
+        }
+		HashMap note = createEmptyNote();
+		HashMap settings = (HashMap)note.get("settings");
+		settings.put(keySettings, mapSettings);
+		ArrayList notes = (ArrayList)tableMap.get("notes");
+		clearEmptyNotes(notes);
+        notes.add(note);
+        updateDates();
+        updateBlockNote();
+    }
+    private void clearEmptyNotes(ArrayList notes)
+    {
+		int i=0;
+		while(i<notes.size())
+		{
+			HashMap noteMap = (HashMap)notes.get(i);
+			if(noteMap.get("cases") == null)
+			{
+				notes.remove(i);
+			}
+			else
+			{
+				i++;
+			}
+		}
+	}
     public void putNewTable()
     {
         HashMap map = getActualHashMap();
@@ -504,13 +540,13 @@ public class BNCore
     }
 
     private void addFileToZip(String fileName, ZipOutputStream zos)
-    throws IOException
+		throws IOException
     {
         File file = new File(fileName);
         addFileToZip(file, zos);
     }
     private void addFileToZip(File file, ZipOutputStream zos)
-    throws IOException
+		throws IOException
     {
         FileInputStream fis = new FileInputStream(file);
         ZipEntry zipEntry = new ZipEntry(file.getName());
@@ -520,7 +556,7 @@ public class BNCore
         fis.close();
     }
     private void writeData(ZipOutputStream zos, InputStream is)
-    throws IOException
+		throws IOException
     {
         byte[] bytes = new byte[1024];
         int length;
@@ -551,7 +587,7 @@ public class BNCore
         }
     }
     private void writeDataToZip(ZipOutputStream zos, String name, String data)
-    throws IOException
+		throws IOException
     {
         zos.putNextEntry(new ZipEntry(name));
         InputStream is = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));

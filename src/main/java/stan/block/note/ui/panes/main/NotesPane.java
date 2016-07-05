@@ -1,5 +1,6 @@
 package stan.block.note.ui.panes.main;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javafx.beans.value.ChangeListener;
@@ -28,7 +29,11 @@ import javafx.scene.shape.Rectangle;
 
 import stan.block.note.core.notes.Note;
 import stan.block.note.core.units.Table;
+
+import stan.block.note.helpers.BNDesktopSettings;
+
 import stan.block.note.listeners.ui.panes.main.INoteBoxListener;
+import stan.block.note.listeners.ui.panes.main.INotesPaneListener;
 
 public class NotesPane
     extends Pane
@@ -41,14 +46,15 @@ public class NotesPane
     //FIELDS
     private ContextMenu menu;
     private boolean hover;
-    private INoteBoxListener listener;
+    private INotesPaneListener listener;
+    private INoteBoxListener noteBoxListener;
 
     public NotesPane()
     {
         super();
         this.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.BLACK, 3, 0, 0, 0));
         this.menu = initContextMenu();
-        this.listener = new INoteBoxListener()
+        this.noteBoxListener = new INoteBoxListener()
         {
             @Override
             public void hover(boolean h)
@@ -64,20 +70,10 @@ public class NotesPane
             @Override
             public void move(double x, double y, double height)
             {
-                //System.out.println("--- --- y - " + y);
-                //System.out.println("--- --- notesBoxesHeight - " + notesBoxes.getHeight());
-                //System.out.println("--- --- NotesPane.this.getHeight() - " + NotesPane.this.getHeight());
-                
                 if(notesBoxes.getHeight() - y <= height || notesBoxes.getWidth() - x <= 0)
                 {
                     scrollTo(scrollPane, x, y + height);
                 }
-                /*
-                else if(notesBoxes.getHeight() - y >= NotesPane.this.getHeight())
-                {
-                    scrollTo(scrollPane, x, y + NotesPane.this.getHeight());
-                }
-                */
             }
             @Override
             public void moveEnd()
@@ -95,20 +91,14 @@ public class NotesPane
                 {
                     if(!hover)
                     {
+						listener.addNew(event.getScreenX(), event.getScreenY());
                         System.out.println("ScreenX - " + event.getScreenX() + " ScreenY - " + event.getScreenY());
                     }
                 }
             }
         });
         this.hover = false;
-        /*
-        center = new Pane();
-        center.setStyle("-fx-background-color: red");
-        center.prefWidthProperty().bind(this.widthProperty());
-        center.setMinHeight(5);
-        */
         scrollPane = new ScrollPane();
-        //scrollPane.setStyle("-fx-background-color: null");
         scrollPane.setStyle("-fx-background-color: rgba(255,255,255,0.6)");
         scrollPane.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
         scrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
@@ -119,43 +109,9 @@ public class NotesPane
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val)
             {
-                System.out.println(new_val.intValue());
+                //System.out.println(new_val.intValue());
             }
         });
-        //setContextMenu(initContextMenu(b));
-    }
-    /*
-    private void scrollTo(ScrollPane pane, Node node)
-    {
-        double width = pane.getContent().getBoundsInLocal().getWidth();
-        double height = pane.getContent().getBoundsInLocal().getHeight();
-        double x = node.getBoundsInParent().getMaxX();
-        double y = node.getBoundsInParent().getMaxY();
-        pane.setVvalue(y/height);
-        pane.setHvalue(x/width);
-        node.requestFocus();
-    }
-    */
-    private void scrollToOld(double x, double y)
-    {
-        double v = 1;
-        //v = (y+scrollPane.getHeight()/2) / notesBoxes.getHeight();
-        v = 1 / (notesBoxes.getHeight() / (y + NotesPane.this.getHeight() / 2));
-        //v = 1/(notesBoxes.getHeight()/y);
-        //v = (y+scrollPane.getHeight()/2)/(notesBoxes.getHeight()/1000)/1000;
-        //v = y/(notesBoxes.getHeight()/10)/10;
-        if(v > 1)
-        {
-            v = 1;
-        }
-        v = y;
-        //v = Math.sqrt(v);
-        System.out.println("--- --- scrollPaneVmax - " + scrollPane.getVmax());
-        System.out.println("--- --- notesBoxesHeight - " + notesBoxes.getHeight());
-        System.out.println("--- --- y - " + y);
-        System.out.println("--- --- scrollPaneHeight - " + scrollPane.getHeight());
-        System.out.println("--- v - " + v);
-        scrollPane.setVvalue(v);
     }
     private void scrollTo(ScrollPane pane, double x, double y)
     {
@@ -189,17 +145,34 @@ public class NotesPane
         //notesBoxes.setStyle("-fx-background-color: rgba(255,255,255,0.6)");
         //notesBoxes.prefWidthProperty().bind(scrollPane.widthProperty());
         //notesBoxes.prefHeightProperty().bind(scrollPane.heightProperty());
-        NoteBox noteBox = new NoteBox(notes.get(0), this.listener);
-        noteBox.setLayoutX(25);
-        noteBox.setLayoutY(25);
-        notesBoxes.getChildren().add(noteBox);
-        //notesBoxes.getChildren().addAll(noteBox, center);
+		for(int i=0; i<notes.size(); i++)
+		{
+			NoteBox noteBox = new NoteBox(notes.get(i), this.noteBoxListener);
+			HashMap settings = notes.get(i).settings;
+			HashMap note_coordinate_settings = (HashMap)settings.get(BNDesktopSettings.NOTE_COORDINATE_SETTINGS);
+			if(note_coordinate_settings == null)
+			{
+				note_coordinate_settings = new HashMap<>();
+				note_coordinate_settings.put("x", 25);
+				note_coordinate_settings.put("y", 25);
+			}
+			noteBox.setLayoutX((Double)note_coordinate_settings.get("x"));
+			noteBox.setLayoutY((Double)note_coordinate_settings.get("y"));
+			notesBoxes.getChildren().add(noteBox);
+			//notesBoxes.getChildren().addAll(noteBox, center);
+		}
+		
         //scrollPane.vmaxProperty().bind(notesBoxes.widthProperty());
         scrollPane.setContent(notesBoxes);
         //this.getChildren().add(notesBoxes);
         this.getChildren().add(scrollPane);
     }
 
+    public void setListener(INotesPaneListener l)
+    {
+		this.listener = l;
+	}
+	
     public void show(Table table)
     {
         this.setStyle("-fx-background-color: #" + table.color);
