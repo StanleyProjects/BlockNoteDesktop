@@ -7,7 +7,7 @@ public class MultiLineText
 {
     public MultiLineText()
     {
-    	super(0);
+    	super(1);
     	data = new MultiLineTextData();
     }
 

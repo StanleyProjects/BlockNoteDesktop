@@ -5,6 +5,7 @@ import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 import javafx.geometry.Bounds;
@@ -18,12 +19,14 @@ import javafx.scene.effect.DropShadow;
 
 import javafx.scene.input.MouseEvent;
 
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import javafx.scene.paint.Color;
 
+import stan.block.note.core.BNCore;
 import stan.block.note.core.notes.Case;
 import stan.block.note.core.notes.Note;
 
@@ -36,19 +39,23 @@ public class NoteBox
     //VIEWS
     private VBox casesBoxes = new VBox();
     private Button move = new Button();
+    private HBox botButtons;
     private Pane back = new Pane();
 
     //FIELDS
     private double xOffset = 0;
     private double yOffset = 0;
     private INoteBoxListener listener;
+    private String actualTableId;
+    private String noteId;
 
-    public NoteBox(Note note, INoteBoxListener l)
+    public NoteBox(String tableId, String id, INoteBoxListener l)
     {
         super();
+		this.actualTableId = tableId;
+		this.noteId = id;
         //this.setStyle("-fx-background-color: white");
         back.setEffect(new DropShadow(BlurType.THREE_PASS_BOX, Color.BLACK, 3, 0, 0, 0));
-        back.setStyle("-fx-background-color: #" + note.color);
         //this.setPadding(new Insets(60));
         this.listener = l;
         this.hoverProperty().addListener(new ChangeListener<Boolean>()
@@ -59,6 +66,7 @@ public class NoteBox
                 //System.out.println("Hover: " + oldValue + " -> " + newValue);
                 listener.hover(newValue);
                 move.setVisible(newValue);
+                botButtons.setVisible(newValue);
                 if(newValue)
                 {
                     back.setEffect(new DropShadow(BlurType.THREE_PASS_BOX, Color.BLACK, 5, 0, 0, 0));
@@ -69,15 +77,6 @@ public class NoteBox
                 }
             }
         });
-        //this.setMinWidth(240);
-        //this.setMinHeight(60);
-        casesBoxes.setStyle("-fx-background-color: rgba(255,255,255,0.8)");
-        //casesBoxes.prefWidthProperty().bind(this.widthProperty());
-        //casesBoxes.prefHeightProperty().bind(this.heightProperty());
-        casesBoxes.setMinWidth(240);
-        casesBoxes.setMinHeight(60);
-        initCases(note.cases);
-        back.getChildren().addAll(casesBoxes);
         StackPane.setMargin(back, new Insets(14));
         //StackPane.setAlignment(back,Pos.CENTER);
         move.setId("move_note");
@@ -108,8 +107,48 @@ public class NoteBox
         });
         move.setVisible(false);
         StackPane.setAlignment(move, Pos.TOP_LEFT);
-        this.getChildren().addAll(back, move);
+		//
+        botButtons = initBotButtons();
+        botButtons.setMaxSize(0, 0);
+        botButtons.setVisible(false);
+        StackPane.setAlignment(botButtons, Pos.BOTTOM_LEFT);
+		//
+        this.getChildren().addAll(back, move, botButtons);
+		refresh();
     }
+    private HBox initBotButtons()
+    {
+        HBox box = new HBox();
+		//
+		Button putNewMLTCase = new Button();
+        putNewMLTCase.setId("put_new_table_button");
+        putNewMLTCase.setText("+MLT");
+        putNewMLTCase.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+				
+            }
+        });
+		//
+        box.getChildren().addAll(putNewMLTCase);
+		return box;
+	}
+	
+    private void refresh()
+    {
+		Note note = BNCore.getInstance().getNote(this.actualTableId, this.noteId);
+        back.setStyle("-fx-background-color: #" + note.color);
+		back.getChildren().remove(casesBoxes);
+		casesBoxes = new VBox();
+        casesBoxes.setStyle("-fx-background-color: rgba(255,255,255,0.8)");
+        casesBoxes.setMinWidth(240);
+        casesBoxes.setMinHeight(60);
+        back.getChildren().add(casesBoxes);
+        initCases(note.cases);
+    }
+	
     private void drag(MouseEvent event)
     {
         double x = event.getScreenX() + xOffset;

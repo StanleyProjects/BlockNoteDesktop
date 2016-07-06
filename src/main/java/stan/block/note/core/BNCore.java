@@ -19,6 +19,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import stan.block.note.core.notes.Note;
+import stan.block.note.core.notes.Case;
 import stan.block.note.core.notes.cases.MultiLineText;
 import stan.block.note.core.notes.cases.SingleLineText;
 import stan.block.note.core.units.Block;
@@ -166,13 +167,54 @@ public class BNCore
 		}
         return null;
 	}
+	public Note getNote(String tableId, String noteId)
+    {
+		Note note = null;
+        HashMap map = getTableHashMap(tableId);
+        if(map != null)
+        {
+            ArrayList notes = (ArrayList)map.get("notes");
+            for(int i = 0; i < notes.size(); i++)
+            {
+				HashMap tmp = (HashMap)notes.get(i);
+				if(tmp.get("id").equals(noteId))
+				{
+					note = addCases(getNote(tmp));
+					break;
+				}
+            }
+        }
+        return note;
+    }
+	private Note addCases(Note note)
+    {
+		note.cases = new ArrayList<>();
+		HashMap noteMap = readData(note.id);
+		if(noteMap != null)
+		{
+			System.out.println("getNote - noteMap != null");
+			note.color = (String)noteMap.get("color");
+			ArrayList cases = (ArrayList)noteMap.get("cases");
+			for(int i=0; i<cases.size(); i++)
+			{
+				HashMap oneCaseMap = (HashMap)cases.get(i);
+				long type = (Long)oneCaseMap.get("type");
+				HashMap data = (HashMap)oneCaseMap.get("data");
+				if(type == 1)
+				{
+					MultiLineText oneCase = new MultiLineText();
+					oneCase.setText((String)data.get("text"));
+					note.cases.add(oneCase);
+				}
+			}
+		}
+		return note;
+	}
 	public Note getNote(HashMap map)
     {
 		Note note = new Note();
 		note.id = (String)map.get("id");
-		note.color = (String)map.get("color");
 		note.settings = (HashMap)map.get("settings");
-		note.cases = new ArrayList<>();
         return note;
     }
     private HashMap getBlock(ArrayList blocks, String id)
@@ -258,6 +300,28 @@ public class BNCore
 	}
 
 
+    private HashMap readData(String name)
+    {
+        ZipFile zf = null;
+        try
+        {
+            zf = new ZipFile(path);
+        }
+        catch(Exception e)
+        {
+            System.out.println("ZipFile - " + e.getMessage());
+        }
+        ZipEntry entry = getZipEntryFromName(zf, name);
+        try
+        {
+            return getMapFromString(FileHelper.readFile(zf.getInputStream(entry)));
+        }
+        catch(Exception e)
+        {
+            System.out.println("getMapFromString - " + e.getMessage());
+        }
+		return null;
+	}
     public void updateData()
     {
         ZipFile zf = null;
@@ -408,16 +472,95 @@ public class BNCore
 		while(i<notes.size())
 		{
 			HashMap noteMap = (HashMap)notes.get(i);
+			/*
 			if(noteMap.get("cases") == null)
 			{
 				notes.remove(i);
 			}
 			else
 			{
-				i++;
+				ArrayList cases = (ArrayList)noteMap.get("cases");
+				if(cases.size() == 0)
+				{
+					notes.remove(i);
+				}
+				else
+				{
+					i++;
+				}
+			}
+			*/
+			HashMap noteFullMap = readData((String)noteMap.get("id"));
+			if(noteFullMap == null)
+			{
+				notes.remove(i);
+			}
+			else
+			{
+				if(noteFullMap.get("cases") == null)
+				{
+					notes.remove(i);
+				}
+				else
+				{
+					ArrayList cases = (ArrayList)noteFullMap.get("cases");
+					if(cases.size() == 0)
+					{
+						notes.remove(i);
+					}
+					else
+					{
+						i++;
+					}
+				}
 			}
 		}
 	}
+    public void editNote(String tableId, Note note)
+    {
+        HashMap tableMap = getTableHashMap(tableId);
+        if(tableMap == null)
+        {
+            return;
+        }
+		ArrayList notes = (ArrayList)tableMap.get("notes");
+        for(int i=0; i<notes.size(); i++)
+        {
+            HashMap noteMap = (HashMap)notes.get(i);
+            String idNote = (String)noteMap.get("id");
+            if(idNote.equals(note.id))
+            {
+                editNote(note);
+                break;
+            }
+        }
+    }
+    private void editNote(Note note)
+    {
+        HashMap map = new HashMap<>();
+		map.put("id", note.id);
+		map.put("color", note.color);
+		map.put("settings", note.settings);
+		ArrayList cases = new ArrayList<>();
+        for(int i=0; i<note.cases.size(); i++)
+        {
+			HashMap oneCase = new HashMap<>();
+			cases.add(oneCase);
+        }
+		map.put("cases", cases);
+        String data = null;
+        try
+        {
+            data = JSONWriter.mapToJSONString(map);
+        }
+        catch(Exception e)
+        {
+            System.out.println("mapToJSONString - " + e.getMessage());
+            return;
+        }
+        updateBlockNote(note.id, data);
+	}
+	
     public void putNewTable()
     {
         HashMap map = getActualHashMap();

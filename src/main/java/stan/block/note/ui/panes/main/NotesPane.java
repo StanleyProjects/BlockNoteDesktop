@@ -27,6 +27,7 @@ import javafx.scene.paint.Color;
 
 import javafx.scene.shape.Rectangle;
 
+import stan.block.note.core.BNCore;
 import stan.block.note.core.notes.Note;
 import stan.block.note.core.units.Table;
 
@@ -44,16 +45,15 @@ public class NotesPane
     //
 
     //FIELDS
-    private ContextMenu menu;
     private boolean hover;
     private INotesPaneListener listener;
     private INoteBoxListener noteBoxListener;
+    private String actualTableId;
 
     public NotesPane()
     {
         super();
         this.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.BLACK, 3, 0, 0, 0));
-        this.menu = initContextMenu();
         this.noteBoxListener = new INoteBoxListener()
         {
             @Override
@@ -91,8 +91,15 @@ public class NotesPane
                 {
                     if(!hover)
                     {
-						listener.addNew(event.getScreenX(), event.getScreenY());
-                        System.out.println("ScreenX - " + event.getScreenX() + " ScreenY - " + event.getScreenY());
+						HashMap settings = new HashMap<>();
+						Bounds bounds = NotesPane.this.getBoundsInLocal();
+						Bounds screenBounds = NotesPane.this.localToScreen(bounds);
+						settings.put("x", event.getScreenX() - screenBounds.getMinX());
+						settings.put("y", event.getScreenY() - screenBounds.getMinY());
+						BNCore.getInstance().putNewNote(actualTableId, BNDesktopSettings.NOTE_COORDINATE_SETTINGS, settings);
+						refresh();
+						//listener.addNew(event.getScreenX(), event.getScreenY());
+                        //System.out.println("ScreenX - " + event.getScreenX() + " ScreenY - " + event.getScreenY());
                     }
                 }
             }
@@ -121,20 +128,10 @@ public class NotesPane
         pane.setHvalue(x / width);
         //node.requestFocus();
     }
-    private ContextMenu initContextMenu()
+    private void refresh()
     {
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem newNote = new MenuItem("New note");
-        newNote.setOnAction(new EventHandler<ActionEvent>()
-        {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                //listener.newNote(item);
-            }
-        });
-        contextMenu.getItems().add(newNote);
-        return contextMenu;
+		Table table = BNCore.getInstance().getTable(actualTableId);
+        initViews(table.notes);
     }
 
     private void initViews(List<Note> notes)
@@ -147,7 +144,7 @@ public class NotesPane
         //notesBoxes.prefHeightProperty().bind(scrollPane.heightProperty());
 		for(int i=0; i<notes.size(); i++)
 		{
-			NoteBox noteBox = new NoteBox(notes.get(i), this.noteBoxListener);
+			NoteBox noteBox = new NoteBox(actualTableId, notes.get(i).id, this.noteBoxListener);
 			HashMap settings = notes.get(i).settings;
 			HashMap note_coordinate_settings = (HashMap)settings.get(BNDesktopSettings.NOTE_COORDINATE_SETTINGS);
 			if(note_coordinate_settings == null)
@@ -175,6 +172,7 @@ public class NotesPane
 	
     public void show(Table table)
     {
+		this.actualTableId = table.id;
         this.setStyle("-fx-background-color: #" + table.color);
         initViews(table.notes);
         this.setVisible(true);
